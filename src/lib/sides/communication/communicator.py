@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 
 class Communicator(ABC):
     @abstractmethod
-    def send_string(self):
+    def send_bytes(self, message: bytes) -> None:
         pass
 
     @abstractmethod
-    def receive_string(self):
+    def receive_bytes(self) -> bytes:
         pass
