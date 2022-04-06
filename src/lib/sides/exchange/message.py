@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass
 
-from src.lib.sides.steps import ProtocolSteps
+from src.lib.sides.exchange.steps import ProtocolSteps
 
 ENCODING = 'UTF-8'
 

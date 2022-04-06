@@ -1,3 +1,4 @@
+from math import gcd
 from typing import List, Dict
 
 from Crypto.Util.number import getPrime
@@ -15,16 +16,18 @@ def decrypt(crypto_data: CryptoData, value: int) -> int:
 
 
 def get_p() -> int:
-    return getPrime(10)
+    return getPrime(200)
 
 
 def get_cd(p: int) -> (int, int):
     c = getRandomRange(1, p - 1)
+    if gcd(c, p - 1) != 1:
+        return get_cd(p)
     d = inverse(c, p - 1)
     return c, d
 
 
 def seed_deck_values(values: List[str], p: int) -> Dict[str, int]:
     return {
-        v: getRandomRange(1, p) for v in values
+        v: getRandomRange(2, p - 2) for v in values
     }

@@ -1,4 +1,5 @@
 import logging
+import queue
 import socket
 from queue import Queue
 from threading import Thread
@@ -7,14 +8,18 @@ from src.lib.sides.communication.communicator import Communicator
 
 
 class StreamCommunicator(Communicator):
+    timeout = 0.1
+
     host: str
     listen_port: int
     send_port: int
 
-    receive_queue: Queue[bytes]
+    stop_flag: bool = False
+
+    receive_queue: 'Queue[bytes]'
     receiver_thread: Thread
 
-    sender_queue: Queue[bytes]
+    sender_queue: 'Queue[bytes]'
     sender_thread: Thread
 
     def __init__(self, host: str, listen_port: int = 23001, send_port: int = 23002):
@@ -42,10 +47,13 @@ class StreamCommunicator(Communicator):
 
         sock.listen(1)
 
-        while True:
+        while True and not self.stop_flag:
+            sock.settimeout(self.timeout)
             connection, address = sock.accept()
+            if not connection:
+                continue
             logging.debug(f'Got a new connection from {address}')
-            while True:
+            while True and not self.stop_flag:
                 message_len = int.from_bytes(connection.recv(4), byteorder='big')
                 message_bytes = connection.recv(message_len)
                 self.receive_queue.put(message_bytes)
@@ -54,8 +62,16 @@ class StreamCommunicator(Communicator):
     def start_sender(self) -> None:
         sock = socket.socket()
         sock.connect((self.host, self.send_port))
-        while True:
-            msg = self.sender_queue.get()
+        while True and not self.stop_flag:
+            try:
+                msg = self.sender_queue.get(timeout=self.timeout)
+            except queue.Empty:
+                continue
             sock.send(len(msg).to_bytes(byteorder='big', length=4))
             sock.send(msg)
         sock.close()
+
+    def stop(self):
+        self.stop_flag = True
+        self.sender_thread.join()
+        self.receiver_thread.join()
