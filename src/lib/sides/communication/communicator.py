@@ -9,3 +9,6 @@ class Communicator(ABC):
     @abstractmethod
     def receive_bytes(self) -> bytes:
         pass
+
+    def stop(self):
+        pass
