@@ -44,7 +44,8 @@ class ExchangeClient(Side):
             if card not in crypto_data.strings.values():
                 self.assert_or_abort(False, f'card value {card} not in deck')
 
-        logging.info(f'Got client deck: {self.convert_deck_to_strings(client_deck, crypto_data.strings)}')
+        self.deck = self.convert_deck_to_strings(client_deck, crypto_data.strings)
+        logging.info(f'Got client deck: {self.deck}')
 
         double_encrypted_deck_end = client_deck_msg.data['double_encrypted_deck_end']
 

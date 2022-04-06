@@ -8,7 +8,7 @@ from src.lib.sides.communication.communicator import Communicator
 
 
 class StreamCommunicator(Communicator):
-    timeout = 0.1
+    timeout = 1
 
     host: str
     listen_port: int
@@ -17,10 +17,10 @@ class StreamCommunicator(Communicator):
     stop_flag: bool = False
 
     receive_queue: 'Queue[bytes]'
-    receiver_thread: Thread
+    receiver_thread: Thread = None
 
     sender_queue: 'Queue[bytes]'
-    sender_thread: Thread
+    sender_thread: Thread = None
 
     def __init__(self, host: str, listen_port: int = 23001, send_port: int = 23002):
         self.host = host
@@ -32,10 +32,11 @@ class StreamCommunicator(Communicator):
         self.receiver_thread.start()
 
         self.sender_queue = Queue()
-        self.sender_thread = Thread(target=self.start_sender)
-        self.sender_thread.start()
 
     def send_bytes(self, message: bytes) -> None:
+        if not self.sender_thread:
+            self.sender_thread = Thread(target=self.start_sender)
+            self.sender_thread.start()
         self.sender_queue.put(message)
 
     def receive_bytes(self) -> bytes:

@@ -16,7 +16,7 @@ def decrypt(crypto_data: CryptoData, value: int) -> int:
 
 
 def get_p() -> int:
-    return getPrime(200)
+    return getPrime(512)
 
 
 def get_cd(p: int) -> (int, int):

@@ -8,6 +8,7 @@ from src.lib.sides.exchange.steps import ProtocolSteps
 
 class Side:
     communicator: Communicator
+    deck: List[str]
 
     def __init__(self, communicator: Communicator):
         self.communicator = communicator
@@ -34,3 +35,6 @@ class Side:
     def convert_deck_to_strings(deck: List[int], strings: Dict[str, int]):
         swapped = dict((v, k) for k, v in strings.items())
         return list([swapped[v] for v in deck])
+
+    def get_deck(self):
+        return self.deck

@@ -34,7 +34,7 @@ def server_thread():
     logging.info(f'Got values from client: {client_values}, is it ok?')
     c, d = get_cd(client_values['p'])
     server.continue_communication(c, d)
-    logging.info('Server got deck!')
+    logging.info(f'Server got deck! ({server.get_deck()})')
     server_communicator.stop()
 
 
@@ -44,7 +44,7 @@ def client_thread():
     client_communicator = StreamCommunicator('localhost', server_port, client_port)
     client = ExchangeClient(client_communicator)
     client.trade(crypto_data)
-    logging.info('Client got deck!')
+    logging.info(f'Client got deck! ({client.get_deck()})')
     client_communicator.stop()
 
 

@@ -61,7 +61,8 @@ class ExchangeServer(Side):
             if card not in crypto_data.strings.values():
                 self.assert_or_abort(False, f'card value {card} not in deck')
 
-        logging.info(f'Got server deck {self.convert_deck_to_strings(server_deck, crypto_data.strings)}')
+        self.deck = self.convert_deck_to_strings(server_deck, crypto_data.strings)
+        logging.info(f'Got server deck {self.deck}')
 
         logging.debug('Ending exchange')
         self.send_message(Message(ProtocolSteps.END))
