@@ -1,3 +1,4 @@
+import _queue
 import logging
 import queue
 import socket
@@ -45,7 +46,7 @@ class StreamCommunicator(Communicator):
         while True and not self.stop_flag:
             try:
                 return self.receive_queue.get(timeout=self.timeout)
-            except TimeoutError:
+            except _queue.Empty:
                 continue
         raise InterruptedError('thread stopped')
 

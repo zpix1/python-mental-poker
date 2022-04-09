@@ -16,7 +16,7 @@ class LabeledIntInput(tk.Frame):
             value = int(self.spinbox.get())
             on_change(value)
 
-        self.spinbox = tk.Spinbox(self, from_=from_, to=to, textvariable=current_value, width=5,
+        self.spinbox = tk.Spinbox(self, from_=from_, to=to, textvariable=current_value,
                                   command=on_change_handler)
         self.spinbox.grid(row=0, column=1)
         if readonly:
