@@ -49,9 +49,12 @@ def client_thread():
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
-    Thread(target=client_thread).start()
-    Thread(target=server_thread).start()
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - [%(levelname)s] -  %(threadName)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s"
+    )
+    Thread(target=client_thread, name='client_thread').start()
+    Thread(target=server_thread, name='server_thread').start()
 
 
 if __name__ == '__main__':

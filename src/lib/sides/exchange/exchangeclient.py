@@ -2,8 +2,7 @@ import logging
 
 from Crypto.Random.random import shuffle, choice
 
-from src.lib.crypto.utils import encrypt, decrypt
-from src.lib.crypto.cryptodata import CryptoData
+from src.lib.crypto.cryptodata import CryptoData, encrypt, decrypt
 from src.lib.sides.exchange.message import Message
 from src.lib.sides.exchange.side import Side
 from src.lib.sides.exchange.steps import ProtocolSteps
