@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from src.lib.crypto.cryptodata import CryptoData
+from src.ui.connectorframe import ConnectorFrame
 from src.ui.cryptodataparametersframe import CryptoDataParametersFrame
 from src.ui.logframe import LogFrame
 from src.ui.cryptodatavaluesframe import CryptoDataValuesFrame
@@ -25,3 +26,6 @@ class AppFrame(tk.Frame):
 
         self.crypto_data_frame = CryptoDataParametersFrame(crypto_data=self.crypto_data)
         self.crypto_data_frame.grid(row=0, column=1, sticky=tk.N)
+
+        self.connector_frame = ConnectorFrame(crypto_data=self.crypto_data)
+        self.connector_frame.grid(row=1, column=0)

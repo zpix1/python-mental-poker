@@ -1,8 +1,14 @@
+import logging
 import tkinter as tk
 
 from src.ui.mainscreen import AppFrame
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s - [%(levelname)s] -  %(threadName)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s"
+    )
+
     window = tk.Tk()
     window.title("Crypto Data Exchange")
 

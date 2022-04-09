@@ -36,5 +36,5 @@ class StringInput(tk.Frame):
 
         current_value.trace("w", lambda name, index, mode, sv=current_value: on_change_handler(current_value))
 
-        self.spinbox = tk.Entry(self, textvariable=current_value, width=5)
+        self.spinbox = tk.Entry(self, textvariable=current_value)
         self.spinbox.grid(row=0, column=1)
