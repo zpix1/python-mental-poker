@@ -22,13 +22,19 @@ class Side:
     def receive_message_of_step(self, step: ProtocolSteps) -> Message:
         message = self.receive_message()
         if message.step != step:
-            self.send_message(Message(ProtocolSteps.ABORT))
-            raise ExchangeException(f'Wrong type of message: {step.value} expected, {message.step.value} actual')
+            if message.step == ProtocolSteps.ABORT:
+                raise ExchangeException(f'Aborted due to {message.data["reason"]}')
+            else:
+                self.send_message(Message(ProtocolSteps.ABORT))
+                raise ExchangeException(f'Wrong type of message: {step.value} expected, {message.step.value} actual')
         return message
+
+    def send_abort_message(self, reason: str = ''):
+        self.send_message(Message(ProtocolSteps.ABORT, {"reason": reason}))
 
     def assert_or_abort(self, value: bool, message: str = '') -> None:
         if not value:
-            self.send_message(Message(ProtocolSteps.ABORT))
+            self.send_message(Message(ProtocolSteps.ABORT, {"reason": message}))
             raise ExchangeException(f'Assert or abort: got false value, {message}')
 
     @staticmethod

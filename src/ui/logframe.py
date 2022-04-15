@@ -15,7 +15,7 @@ class LogFrameHandler(StreamHandler):
 
     def emit(self, record: LogRecord) -> None:
         msg = self.format(record)
-        self.queue.put(msg)
+        self.queue.put_nowait(msg)
 
     def start_posting(self):
         while True:

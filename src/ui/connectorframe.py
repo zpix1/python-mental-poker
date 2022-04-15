@@ -70,7 +70,8 @@ class ConnectorFrame(tk.Frame):
 
         row += 1
 
-        self.wait_button = tk.Button(self, text="Start waiting for connection", state='disabled', command=self.wait_for_connection)
+        self.wait_button = tk.Button(self, text="Start waiting for connection", state='disabled',
+                                     command=self.wait_for_connection)
         self.wait_button.grid(row=row, column=0, columnspan=2)
 
     def listen(self):
@@ -98,12 +99,15 @@ class ConnectorFrame(tk.Frame):
                       f'k={client_values["k"]}\n' \
                       f'Deck: {", ".join(client_values["strings"].keys())}\n' \
                       f'Accept it?'
-            if messagebox.askyesno('New connection',request):
+            if messagebox.askyesno('New connection', request):
                 c, d = get_cd(client_values['p'])
                 server.continue_communication(c, d)
                 messagebox.showinfo('Server got deck!', f'Your secure server deck:\n{", ".join(server.get_deck())}')
             else:
-                server.assert_or_abort(False, 'server declined connection')
+                server.send_abort_message('Server declined connection')
+                logging.info('Connection aborted due to user decision')
+                self.communicator.stop()
+                self.start_listening()
 
     def connect(self):
         try:
@@ -115,5 +119,7 @@ class ConnectorFrame(tk.Frame):
             logging.debug('Traded')
             logging.info(f'Client got deck! ({client.get_deck()})')
         except Exception as e:
-            logging.exception(f'Exchange error {e}')
-            messagebox.showwarning('Error!', str(e))
+            logging.exception(e)
+            messagebox.showwarning('Error!', 'Server closed connection or someone tried to cheat')
+            self.communicator.stop()
+            self.start_listening()

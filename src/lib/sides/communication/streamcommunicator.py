@@ -65,8 +65,12 @@ class StreamCommunicator(Communicator):
                     continue
                 logging.debug(f'Got a new connection from {address}')
                 while True and not self.stop_flag:
-                    message_len = int.from_bytes(connection.recv(4), byteorder='big')
+                    len_bytes = connection.recv(4)
+                    if len(len_bytes) != 4:
+                        raise RuntimeError('Connection closed or broken packet sent')
+                    message_len = int.from_bytes(len_bytes, byteorder='big')
                     message_bytes = connection.recv(message_len)
+                    logging.debug(f'Got a new message bytes of size {message_len}: {message_bytes[:10]}')
                     self.receive_queue.put(message_bytes)
                 connection.close()
         except Exception as e:
@@ -76,6 +80,7 @@ class StreamCommunicator(Communicator):
     def start_sender(self) -> None:
         try:
             sock = socket.socket()
+            sock.settimeout(1)
             sock.connect((self.host, self.send_port))
             while True and not self.stop_flag:
                 try:
