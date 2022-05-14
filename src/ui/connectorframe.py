@@ -111,7 +111,6 @@ class ConnectorFrame(tk.Frame):
 
     def connect(self):
         try:
-            logging.debug('Created communicator')
             client = ExchangeClient(self.communicator)
             logging.debug('Created exchange client')
             client.trade(self.crypto_data)

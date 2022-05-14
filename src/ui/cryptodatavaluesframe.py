@@ -28,7 +28,7 @@ class CryptoDataValuesFrame(tk.Frame):
         for i, v in enumerate(self.values):
             def on_change(value):
                 self.values[i] = value
-                self.sync()
+                self.crypto_data.strings = seed_deck_values(self.values, self.crypto_data.p)
 
             StringInput(v, on_change=on_change, master=self).grid(row=i + 1, column=0, columnspan=2)
 
