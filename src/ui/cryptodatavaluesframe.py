@@ -26,11 +26,16 @@ class CryptoDataValuesFrame(tk.Frame):
         tk.Label(self, text="Values").grid(row=0, column=0, columnspan=2)
 
         for i, v in enumerate(self.values):
-            def on_change(value):
-                self.values[i] = value
-                self.crypto_data.strings = seed_deck_values(self.values, self.crypto_data.p)
+            def on_change_factory(i):
+                def on_change(value):
+                    eff_i = i
+                    self.values[eff_i] = value
+                    self.crypto_data.strings = seed_deck_values(self.values, self.crypto_data.p)
+                    print(eff_i, self.values)
+                    print(self.crypto_data.strings.keys())
+                return on_change
 
-            StringInput(v, on_change=on_change, master=self).grid(row=i + 1, column=0, columnspan=2)
+            StringInput(v, on_change=on_change_factory(i), master=self).grid(row=i + 1, column=0, columnspan=2)
 
         tk.Button(self, text='+', command=self.add_entry).grid(row=len(self.values) + 1, column=0)
         tk.Button(self, text='-', command=self.remove_entry).grid(row=len(self.values) + 1, column=1)
